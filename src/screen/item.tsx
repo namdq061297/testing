@@ -50,7 +50,8 @@ const Item = React.memo<Props>(({item, index}) => {
         style={[styles.bg, styles.shadowProp]}
         imageStyle={styles.imgStyle}
         source={{
-          uri: 'https://static.molo.vn/2022/01/spider-man-no-way-home-new-poster-1200.jpg',
+          // uri: 'https://api.themoviedb.org/upload/' + item?.poster_path,
+          uri: 'https://upload.wikimedia.org/wikipedia/vi/b/b4/Poster_phim_7_thi_th%E1%BB%83.jpg'
         }}>
         <View style={styles.wrapVote}>
           {renderVoteNumber(item?.vote_average)}

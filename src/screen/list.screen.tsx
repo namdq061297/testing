@@ -1,13 +1,19 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  FlatList, SafeAreaView,
-  StyleSheet, Text
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
-import Item, { Post } from './item';
+import Item, {Post} from './item';
 
 const ListPost = React.memo(() => {
   const [isRefresh, setIsRefresh] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Post[]>([]);
 
   useEffect(() => {
@@ -23,28 +29,35 @@ const ListPost = React.memo(() => {
         },
       })
       .then(function (response) {
-        console.log(response);
-        
-        setIsRefresh(false);
         if (response?.data?.results) {
           setData(response?.data?.results);
         }
       })
       .catch(function (error) {
+        console.log(error);
+      })
+      .finally(() => {
+        setLoading(false);
         setIsRefresh(false);
       });
   };
 
   return (
     <SafeAreaView style={styles.wrap}>
+      {loading && (
+        <View style={[styles.container]}>
+          <ActivityIndicator />
+        </View>
+      )}
       <FlatList
         onRefresh={() => {
-          setIsRefresh(true);
+          true;
           getData();
         }}
         ListHeaderComponent={() => (
           <Text style={styles.title}>Popular list</Text>
         )}
+        showsVerticalScrollIndicator={false}
         refreshing={isRefresh}
         contentContainerStyle={styles.wrapContent}
         keyExtractor={(item, index) => index.toString()}
@@ -72,5 +85,15 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     fontSize: 22,
     fontWeight: '500',
+    color: '#8B8B8B',
+  },
+  container: {
+    position: 'absolute',
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.65)',
+    zIndex: 1,
   },
 });
